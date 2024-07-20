@@ -1,0 +1,22 @@
+<div class="flex flex-col gap-4">
+  <h1 class="font-mono text-5xl">Update <%= @airport.iata_code %></h1>
+  <div class="border-t border-b py-4 border-gray-200">
+    <p>
+      Thanks for taking the time to give us suggestions! I'm currently working on an interactive form to let people update the airports in a more structured manner but for now, there is just a text box below. Please place any comments here and I'll try to get them implented ASAP. (usually one update wave every few days)
+    </p>
+  </div>
+  <.form
+    for={@form}
+    action={"/airports/#{ @airport.iata_code }/update"}
+    method="POST"
+    class="flex flex-col gap-2"
+  >
+    <textarea name="feedback" id="feedback" class="w-full h-64" placeholder="Comments"></textarea>
+    <%= if function_exported?(Mix, :env, 0) == false do %>
+      <%= raw(Hcaptcha.Template.display()) %>
+    <% end %>
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4">
+      Submit
+    </button>
+  </.form>
+</div>

@@ -1,0 +1,79 @@
+<div class="w-full h-full flex flex-col gap-8">
+  <div class="w-full flex justify-center items-center">
+    <h1 class="text-3xl md:text-5xl font-mono">Fly with Film</h1>
+  </div>
+  <div class="w-full flex flex-row justify-center items-center">
+    <.form
+      for={@search_form}
+      class="flex flex-row gap-2 w-full px-8 max-w-3xl"
+      action="/search"
+      method="POST"
+    >
+      <input
+        type="text"
+        placeholder="Airport"
+        id="airport-code"
+        name="airport-code"
+        class="h-[42px] w-full focus:ring-sky-500"
+      />
+      <button type="submit" class="bg-black text-white px-2 h-[42px]">
+        Search
+      </button>
+    </.form>
+  </div>
+  <div class="w-full flex justify-center items-center">
+    <div class="w-full flex flex-col sm:flex-row justify-between items-center gap-4 px-8 max-w-3xl">
+      <%= for airport <- @airports do %>
+        <a class="w-full" href={~p"/airports/#{airport.code}"}>
+          <div class="w-full flex flex-col border-x border-y border-black">
+            <%= if airport.grading == :good do %>
+              <div class="w-full h-[15px] bg-green-400"></div>
+            <% else %>
+              <%= if airport.grading == :pending do %>
+                <div class="w-full h-[15px] bg-amber-400"></div>
+              <% else %>
+                <div class="w-full h-[15px] bg-red-400"></div>
+              <% end %>
+            <% end %>
+            <div class="w-full px-2 py-1">
+              <p class="font-mono text-2xl uppercase"><%= airport.code %></p>
+            </div>
+            <div class="w-full px-2 py-1 flex flex-row justify-between">
+              <p class="inline-flex flex-row gap-1">
+                <span>⬆️</span>
+                <span><%= airport.pos %></span>
+              </p>
+              <p class="inline-flex flex-row gap-1">
+                <span>⬇️</span>
+                <span><%= airport.neg %></span>
+              </p>
+            </div>
+          </div>
+        </a>
+      <% end %>
+    </div>
+  </div>
+  <div class="w-full flex justify-center items-center">
+    <div class="w-full max-w-3xl px-8 text-center">
+      <p>
+        Film isn't dead but trying to travel with it means it might as well be. This website was designed to help people fly with film easier by collecting the information you need in one place and letting everyone contribute their knowlage! Please feel free to just use the information but if you know the policies of any airports, have emails from an airport or just know something we are missing look for the "Anything Missing?" buttons around the site.
+      </p>
+    </div>
+  </div>
+  <div class="w-full flex justify-center items-center">
+    <div class="flex flex-row gap-2 w-full px-8 max-w-3xl">
+      <%!-- <a
+        href="https://github.com/sponsors/harryet"
+        class="hidden md:inline-flex md:w-1/4 items-center justify-center bg-black text-white px-2 h-[42px] border border-white hover:cursor-pointer hover:bg-white hover:border-black hover:text-black"
+      >
+        Donate
+      </a> --%>
+      <a
+        href="https://github.com/harryet/flywithfilm"
+        class="h-[42px] w-full border border-black inline-flex items-center justify-center hover:text-white hover:bg-black"
+      >
+        https://github.com/harryet/flywithfilm
+      </a>
+    </div>
+  </div>
+</div>
