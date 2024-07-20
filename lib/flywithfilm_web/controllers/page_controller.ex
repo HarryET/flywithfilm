@@ -20,7 +20,7 @@ defmodule FlywithfilmWeb.PageController do
           policies_verified: airport.policies_verified,
           # either :good, :bad, or :pending
           grading:
-            if airport.policies_verified do
+            if airport.positive_votes + airport.negative_votes >= 10 do
               if airport.positive_votes > airport.negative_votes do
                 :good
               else
@@ -72,7 +72,7 @@ defmodule FlywithfilmWeb.PageController do
               neg: airport.negative_votes,
               policies_verified: airport.policies_verified,
               grading:
-                if airport.policies_verified do
+                if airport.positive_votes + airport.negative_votes >= 10 do
                   if airport.positive_votes > airport.negative_votes do
                     :good
                   else
