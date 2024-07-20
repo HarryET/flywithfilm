@@ -129,16 +129,21 @@ defmodule FlywithfilmWeb.PageController do
         {:error, _errors} ->
           conn
           |> put_flash(:error, "reCAPTCHA error")
-          |> redirect(to: "/")
+          |> redirect(to: "/airports/#{iata_code}/update")
           |> halt()
 
         _ ->
           post_update_webhook(iata_code, params["feedback"])
 
-          conn |> put_flash(:info, "Thank you for your feedback!") |> redirect(to: "/")
+          conn
+          |> put_flash(:info, "Thank you for your feedback!")
+          |> redirect(to: "/airports/#{iata_code}")
       end
     else
-      conn |> redirect(to: "/") |> halt()
+      conn
+      |> put_flash(:error, "This is awkward, please try again.")
+      |> redirect(to: "/")
+      |> halt()
     end
   end
 
@@ -156,16 +161,17 @@ defmodule FlywithfilmWeb.PageController do
         conn |> render(:no_airport) |> halt()
 
       airport ->
-        case from(a in Airport,
-               update: [inc: [positive_votes: 1]],
-               where: a.iata_code == ^airport.iata_code
-             )
-             |> Repo.one() do
+        case Airport.changeset(airport, %{positive_votes: airport.positive_votes + 1})
+             |> Repo.update() do
           {:ok, _} ->
-            conn |> put_flash(:info, "Thank you for your feedback!") |> redirect(to: "/")
+            conn
+            |> put_flash(:info, "Thank you for your feedback!")
+            |> redirect(to: "/airports/#{iata_code}")
 
           {:error, _} ->
-            conn |> put_flash(:error, "An error occurred") |> redirect(to: "/")
+            conn
+            |> put_flash(:error, "An error occurred")
+            |> redirect(to: "/airports/#{iata_code}")
         end
     end
   end
@@ -177,16 +183,17 @@ defmodule FlywithfilmWeb.PageController do
         conn |> render(:no_airport) |> halt()
 
       airport ->
-        case from(a in Airport,
-               update: [inc: [negative_votes: 1]],
-               where: a.iata_code == ^airport.iata_code
-             )
-             |> Repo.one() do
+        case Airport.changeset(airport, %{negative_votes: airport.negative_votes + 1})
+             |> Repo.update() do
           {:ok, _} ->
-            conn |> put_flash(:info, "Thank you for your feedback!") |> redirect(to: "/")
+            conn
+            |> put_flash(:info, "Thank you for your feedback!")
+            |> redirect(to: "/airports/#{iata_code}")
 
           {:error, _} ->
-            conn |> put_flash(:error, "An error occurred") |> redirect(to: "/")
+            conn
+            |> put_flash(:error, "An error occurred")
+            |> redirect(to: "/airports/#{iata_code}")
         end
     end
   end
